@@ -9,7 +9,7 @@
 本项目是基于Gradio搭建的服务于[讯飞开放平台](https://training.xfyun.cn/overview)的工具箱，支持调用微调模型进行bot聊天，批量数据测试，以及数据转换如：JSONL转CSV，CSV转JSONL。
 
 <div style="text-align: center;">
-<img src="picture/toolbox.jpg" alt="工具箱" width="450" height="450">
+<img src="picture/toolbox.jpg" alt="工具箱" width="600" height="600">
 <p style="text-align: center;">该图片由星火大模型生成</p>
 </div>
 
@@ -25,26 +25,15 @@ WebUI主要由四个版块组成
 - 批量测试
 - 小工具
 
-<div style="text-align: center;">
-<img src="picture/homechatbot.png" alt="工具箱" width="700" height="450">
-<p style="text-align: center;">Chatbot（单条测试）</p>
-</div>
+![Chatbot（单条测试）](picture/homechatbot.png)
 
 左侧为接口参数，需要在[讯飞开放平台](https://training.xfyun.cn/overview)获得哦
-
-<div style="text-align: center;">
-<img src="picture/batch.png" alt="工具箱" width="700" height="450">
-<p style="text-align: center;">批量测试</p>
-</div>
 
 ![批量测试](picture/batch.png)
 
 批量测试与Chatbot共享同一个接口信息
 
-<div style="text-align: center;">
-<img src="picture/tools.png" alt="工具箱" width="700" height="450">
-<p style="text-align: center;">小工具</p>
-</div>
+![小工具](picture/tools.png)
 
 注意：
 
