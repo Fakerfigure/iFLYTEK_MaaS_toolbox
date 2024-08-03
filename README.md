@@ -9,7 +9,7 @@
 本项目是基于Gradio搭建的服务于[讯飞开放平台](https://training.xfyun.cn/overview)的工具箱，支持调用微调模型进行bot聊天，批量数据测试，以及数据转换如：JSONL转CSV，CSV转JSONL。
 
 <div style="text-align: center;">
-<img src="picture/toolbox.jpg" alt="工具箱" width="300" height="300">
+<img src="picture/toolbox.jpg" alt="工具箱" width="450" height="450">
 <p style="text-align: center;">该图片由星火大模型生成</p>
 </div>
 
