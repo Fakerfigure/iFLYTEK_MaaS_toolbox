@@ -1,0 +1,3 @@
+gradio == 4.38.1
+spark_ai_python
+pandas == 2.0.3
