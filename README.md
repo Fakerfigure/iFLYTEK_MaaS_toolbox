@@ -37,6 +37,8 @@ WebUI主要由四个版块组成
 <p style="text-align: center;">批量测试</p>
 </div>
 
+![批量测试](picture/batch.png)
+
 批量测试与Chatbot共享同一个接口信息
 
 <div style="text-align: center;">
