@@ -76,7 +76,7 @@ cd iFLYTEK_MaaS_toolbox
 
 - 安装依赖
 ```bash
-    pip install -r requirement.txt
+    pip install -r requirements.txt
 ```
 #### 启动
 
