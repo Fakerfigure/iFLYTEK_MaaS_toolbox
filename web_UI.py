@@ -286,7 +286,7 @@ with gr.Blocks(
                     outputs = [outputfile], 
                     description="目前仅支持单个CSV，有且仅有‘input’列",
                 )
-                cancel_button = gr.Button("取消任务")
+                cancel_button = gr.Button("提前完成")
                 cancel_button.click(fn=set_cancel_flag)
                 gr.Interface(
                 fn=logput,
