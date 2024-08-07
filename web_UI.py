@@ -64,9 +64,10 @@ def process_input_s(input_data, spark_api_url, spark_app_id, spark_api_key, spar
     response = spark.generate([messages])
     return response.generations[0][0].text if response else ""
 
+
 def generate_file(file_obj, outputpath, text_prompt, spark_api_url, spark_app_id, spark_api_key, spark_api_secret,
                   spark_llm_domain, streaming, max_tokens, request_timeout, top_k, text_Patch_id, API_temp):
-    
+
     global cancel_flag
     cancel_flag = False
     tmpdir = tempfile.mkdtemp()
@@ -75,39 +76,26 @@ def generate_file(file_obj, outputpath, text_prompt, spark_api_url, spark_app_id
         print('临时文件夹地址：{}'.format(tmpdir))
         FilePath = file_obj.name
         print('上传文件的地址：{}'.format(FilePath))
-
         global log_content
-        # 将文件复制到临时目录中
+
         shutil.copy(file_obj.name, tmpdir)
-
-        # 获取上传Gradio的文件名称
         FileName = os.path.basename(file_obj.name)
-        print(FilePath)
-
-        # 打开复制到新路径后的文件
         df = pd.read_csv(FilePath)
 
-        # 检查是否存在output列，如果不存在则创建
         if 'output' not in df.columns:
             df['output'] = None
 
-        # 处理每一行的input列
         for index, row in df.iterrows():
 
-            if pd.notna(row['input']):
-
-                if cancel_flag:  # 如果取消标志被设置，则退出循环
-                    break
+            if pd.notna(row['input']) and not cancel_flag:
 
                 input_F = text_prompt + f"{row['input']}"
-                # print(input_F)
-                
-                processed_output = process_input_s(input_F, spark_api_url, spark_app_id, spark_api_key, spark_api_secret,
-                                                    spark_llm_domain, streaming, max_tokens, request_timeout, top_k, text_Patch_id, API_temp)
-                print(processed_output)
-                # print(f"ok! This is the {index+1}th data processed.")
-                now = datetime.now()
-                log_content += f"""
+
+                try:
+                    processed_output = process_input_s(input_F, spark_api_url, spark_app_id, spark_api_key, spark_api_secret,
+                                                       spark_llm_domain, streaming, max_tokens, request_timeout, top_k, text_Patch_id, API_temp)
+                    now = datetime.now()
+                    log_content += f"""
 {now}
 当前接口信息:
 APPID:{spark_app_id}
@@ -116,28 +104,36 @@ APISecret:{spark_api_secret}
 Domain:{spark_llm_domain}
 Patch_ID：{text_Patch_id}\n
 """
-                log_content +="-"*80+f"{now}"+"-"*80+"\n"
-                log_content += f"OUTPUT >> \n{processed_output} \n"
-                log_content +="-"*80+f"{now}"+"-"*80+"\n"
-                log_content += f"The {index+1}th data processed. \n"
-                print(log_content)
-                df.at[index, 'output'] = processed_output
+                    log_content += "-"*80+f"{now}"+"-"*80+"\n"
+                    log_content += f"OUTPUT >> \n{processed_output} \n"
+                    log_content += "-"*80+f"{now}"+"-"*80+"\n"
+                    log_content += f"The {index+1}th data processed. \n"
+                    print(log_content)
 
-        outputPath = os.path.join(tmpdir, os.path.splitext(FileName)[0] + "_processed" + ".csv")
+                    df.at[index, 'output'] = processed_output
 
-        print("任务已完成！")
-        log_content += "任务已完成！"
+                except Exception as e:
+                    if str(e).startswith('Error Code: 10013'):
+                        df.at[index, 'output'] = str(e)
+                        log_content += f"违规内容已记录，跳过该条目：{e}\n"
+                        print(f"违规内容已记录，跳过该条目：{e}")
+                    else:
+                        raise e
+
+        # 移动保存逻辑到这里，确保只在所有数据处理完毕后调用一次
+        outputPath = os.path.join(outputpath, os.path.splitext(FileName)[0] + "_processed" + ".csv")
         df.to_csv(outputPath, index=False)
-        # 返回新文件的地址
+        print("所有数据处理完成并保存。")
+        log_content += "所有数据处理完成并保存。\n"
+
         return outputPath
-    
+
     except Exception as e:
         log_content += f"Error occurred: {str(e)}\n"
-    
+
     finally:
         cancel_flag = False
-        shutil.rmtree('temp_dir', ignore_errors=True)
-
+        shutil.rmtree(tmpdir, ignore_errors=True)
 
 def generate_file_jsonl2csv(file_obj):    
     # 创建临时目录
@@ -322,5 +318,5 @@ with gr.Blocks(
                     gr.Markdown("- [我的工具箱](https://toolgg.com/)")
     concurrency_limit = 10
 web_demo.launch(
-    share=True,
+    share=False,
 )
