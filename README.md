@@ -31,7 +31,7 @@ WebUI主要由四个版块组成
 
 ![批量测试](picture/batch.png)
 
-批量测试与Chatbot共享同一个接口信息
+批量测试与Chatbot共享同一个接口信息，输入内容需要在“input”列下，模型的返回会输出在“output”列下，如果没有output列会自动生成表头。
 
 ![小工具](picture/tools.png)
 
