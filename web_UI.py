@@ -246,7 +246,7 @@ with gr.Blocks(
             API_temp = gr.Slider(value=0.5, minimum=0.1, maximum=0.99, label='Temperature',step=0.1)
             with gr.Row():
                 # text_Max_token = gr.Textbox(label="Max_token", value=4096)
-                text_Max_token = gr.Number(label="Max_token",value=4096, precision=0, minimum=1024, maximum=8192,step=1024)
+                text_Max_token = gr.Number(label="Max_token",value=2048, precision=0, minimum=1024, maximum=4096,step=1024)
                 text_Top_k=gr.Number(label="Top_k",value=4, precision=0, minimum=1, maximum=6)
                 API_Stream = gr.Checkbox(label="Stream",value=True,interactive=False)
 
